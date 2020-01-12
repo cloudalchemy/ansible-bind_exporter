@@ -1,0 +1,16 @@
+---
+- name: Create the bind_exporter group
+  group:
+    name: "{{ bind_exporter_system_group }}"
+    state: present
+    system: true
+
+- name: Create the bind_exporter user
+  user:
+    name: "{{ bind_exporter_system_user }}"
+    groups: "{{ bind_exporter_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    createhome: false
+    home: /

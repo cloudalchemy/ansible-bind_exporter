@@ -1,0 +1,36 @@
+---
+- name: Gather variables for each operating system
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution_file_variety | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  tags:
+    - bind_exporter_install
+    - bind_exporter_configure
+    - bind_exporter_run
+
+- import_tasks: preflight.yml
+  tags:
+    - bind_exporter_install
+    - bind_exporter_configure
+    - bind_exporter_run
+
+- import_tasks: install.yml
+  become: true
+  tags:
+    - bind_exporter_install
+
+- import_tasks: configure.yml
+  become: true
+  tags:
+    - bind_exporter_configure
+
+- name: Ensure bind_exporter is enabled on boot
+  become: true
+  systemd:
+    daemon_reload: true
+    name: bind_exporter
+    enabled: true
+  tags:
+    - bind_exporter_run
