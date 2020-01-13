@@ -1,0 +1,8 @@
+---
+- name: Run role
+  hosts: all
+  any_errors_fatal: true
+  roles:
+    - ansible-bind_exporter
+  vars:
+    bind_exporter: latest

@@ -1,0 +1,19 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=bind_exporter
+After=network-online.target
+StartLimitInterval=0
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User={{ bind_exporter_system_user }}
+Group={{ bind_exporter_system_group }}
+ExecStart=/usr/local/bin/bind_exporter
+SyslogIdentifier=bind_exporter
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
