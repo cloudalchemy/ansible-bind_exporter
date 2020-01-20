@@ -14,3 +14,47 @@
     system: true
     createhome: false
     home: /
+
+- block:
+    - name: Download bind_exporter binary to local folder
+      become: false
+      get_url:
+        url: "https://github.com/prometheus-community/bind_exporter/releases/download/v{{ bind_exporter_version }}/bind_exporter-{{ bind_exporter_version }}.linux-{{ go_arch }}.tar.gz"
+        dest: "/tmp/bind_exporter-{{ bind_exporter_version }}.linux-{{ go_arch }}.tar.gz"
+        checksum: "sha256:{{ __bind_exporter_checksum }}"
+      register: _download_binary
+      until: _download_binary is succeeded
+      retries: 5
+      delay: 2
+      delegate_to: localhost
+      check_mode: false
+
+    - name: Unpack bind_exporter binary
+      become: false
+      unarchive:
+        src: "/tmp/bind_exporter-{{ bind_exporter_version }}.linux-{{ go_arch }}.tar.gz"
+        dest: "/tmp"
+        creates: "/tmp/bind_exporter-{{ bind_exporter_version }}.linux-{{ go_arch }}/bind_exporter"
+      delegate_to: localhost
+      check_mode: false
+
+    - name: Propagate bind_exporter binaries
+      copy:
+        src: "/tmp/bind_exporter-{{ bind_exporter_version }}.linux-{{ go_arch }}/bind_exporter"
+        dest: "/usr/local/bin/bind_exporter"
+        mode: 0755
+        owner: root
+        group: root
+      notify: restart bind_exporter
+      when: not ansible_check_mode
+  when: bind_exporter_binary_local_dir | length == 0
+
+- name: propagate locally distributed bind_exporter binary
+  copy:
+    src: "{{ bind_exporter_binary_local_dir }}/bind_exporter"
+    dest: "/usr/local/bin/bind_exporter"
+    mode: 0755
+    owner: root
+    group: root
+  when: bind_exporter_binary_local_dir | length > 0
+  notify: restart bind_exporter

@@ -19,7 +19,13 @@ All variables which can be overridden are stored in [defaults/main.yml](defaults
 
 | Name           | Default Value | Description                        |
 | -------------- | ------------- | -----------------------------------|
-| `bind_exporter_web_listen_address` | "0.0.0.0:9119" | Address on which bind_exporter will listen |
+| `bind_exporter_version | "0.3.0" | Version of the bind_exporter. Also accepts latest as a parameter. |
+| `bind_exporter_binary_local_dir:` | "" | Allows to use local packages instead of ones distributed on github. As parameter it takes a directory where `bind_exporter` binary is stored on host on which ansible is ran. This overrides `bind_exporter_version` parameter |
+| `bind_exporter_web_listen_address` | "0.0.0.0:9119" | Address on which bind_exporter will listen. |
+| `bind_exporter_pid_file:` | "/run/named/named.pid" | The PID file of the bind process. |
+| `bind_exporter_stats_groups` | "server,view" | A list of stats groups to poll. |
+| `bind_exporter_stats_url` | "http://localhost:8053/" | The URL of the bind statistics-channel. |
+| `bind_exporter_stats_version` | "auto" | Which polling API to use. |
 
 ## Example
 

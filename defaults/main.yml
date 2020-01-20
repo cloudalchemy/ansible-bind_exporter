@@ -1,2 +1,13 @@
 ---
+bind_exporter_version: 0.3.0
+bind_exporter_binary_local_dir: ""
 bind_exporter_web_listen_address: "0.0.0.0:9119"
+
+# Customize the defualt PID file.
+# bind_exporter_pid_file: /run/named/named.pid
+bind_exporter_stats_groups:
+  - server
+  - view
+# Customize the default stats URL.
+# bind_exporter_stats_url: http://localhost:8053/
+bind_exporter_stats_version: auto

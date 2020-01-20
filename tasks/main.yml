@@ -1,15 +1,4 @@
 ---
-- name: Gather variables for each operating system
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution_file_variety | lower }}.yml"
-    - "{{ ansible_distribution | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
-  tags:
-    - bind_exporter_install
-    - bind_exporter_configure
-    - bind_exporter_run
-
 - import_tasks: preflight.yml
   tags:
     - bind_exporter_install
@@ -18,8 +7,15 @@
 
 - import_tasks: install.yml
   become: true
+  when: (not __bind_exporter_is_installed.stat.exists) or (__bind_exporter_current_version_output.stdout_lines[0].split(" ")[2] != bind_exporter_version)
   tags:
     - bind_exporter_install
+
+- import_tasks: selinux.yml
+  become: true
+  when: ansible_selinux.status == "enabled"
+  tags:
+    - bind_exporter_configure
 
 - import_tasks: configure.yml
   become: true
@@ -32,5 +28,6 @@
     daemon_reload: true
     name: bind_exporter
     enabled: true
+    state: started
   tags:
     - bind_exporter_run
