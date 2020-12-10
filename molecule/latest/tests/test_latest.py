@@ -5,6 +5,7 @@ import testinfra.utils.ansible_runner
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
+
 @pytest.mark.parametrize("files", [
     "/etc/systemd/system/bind_exporter.service",
     "/usr/local/bin/bind_exporter"
