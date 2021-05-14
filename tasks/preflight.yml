@@ -29,6 +29,20 @@
     - bind_exporter_install
     - skip_ansible_lint
 
+- name: Set variable __bind_exporter_current_version for bind_exporter below 0.4.0
+  set_fact:
+    __bind_exporter_current_version: "{{ __bind_exporter_current_version_output.stdout_lines[0].split(' ')[2] }}"
+  tags:
+    - bind_exporter_install
+  when: ( __bind_exporter_is_installed.stat.exists and __bind_exporter_current_version_output.stdout_lines | length > 0)
+
+- name: Set variable __bind_exporter_current_version for bind_exporter above or equal 0.4.0
+  set_fact:
+    __bind_exporter_current_version: "{{ __bind_exporter_current_version_output.stderr_lines[0].split(' ')[2] }}"
+  tags:
+    - bind_exporter_install
+  when: ( __bind_exporter_is_installed.stat.exists and __bind_exporter_current_version_output.stderr_lines | length > 0)
+
 - block:
     - name: Get latest release
       uri:
