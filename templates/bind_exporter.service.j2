@@ -12,14 +12,14 @@ User={{ bind_exporter_system_user }}
 Group={{ bind_exporter_system_group }}
 ExecStart=/usr/local/bin/bind_exporter \
 {% if bind_exporter_pid_file is defined -%}
-  -bind.pid-file "{{ bind_exporter_pid_file }}" \
+  --bind.pid-file "{{ bind_exporter_pid_file }}" \
 {% endif -%}
-  -bind.stats-groups "{{ bind_exporter_stats_groups | join(',') }}" \
+  --bind.stats-groups "{{ bind_exporter_stats_groups | join(',') }}" \
 {% if bind_exporter_stats_url is defined -%}
-  -bind.stats-url "{{ bind_exporter_stats_url }}" \
+  --bind.stats-url "{{ bind_exporter_stats_url }}" \
 {% endif -%}
-  -bind.stats-version "{{ bind_exporter_stats_version }}" \
-  -web.listen-address "{{ bind_exporter_web_listen_address }}"
+  --bind.stats-version "{{ bind_exporter_stats_version }}" \
+  --web.listen-address "{{ bind_exporter_web_listen_address }}"
 SyslogIdentifier=bind_exporter
 Restart=always
 RestartSec=5

@@ -7,7 +7,7 @@
 
 - import_tasks: install.yml
   become: true
-  when: (not __bind_exporter_is_installed.stat.exists) or (__bind_exporter_current_version_output.stdout_lines[0].split(" ")[2] != bind_exporter_version)
+  when: (not __bind_exporter_is_installed.stat.exists) or (__bind_exporter_current_version != bind_exporter_version)
   tags:
     - bind_exporter_install
 
